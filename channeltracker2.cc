@@ -227,14 +227,16 @@ int channel_tracker_v2::packet_chain_handler(CHAINCALL_PARMS) {
         return 1;
 
     time_t stime = time(0);
-
+    double airtime = 0;
     if (freq_channel) {
         freq_channel->get_signal_data()->append_signal(*l1info, false, 0);
         freq_channel->get_packets_rrd()->add_sample(1, stime);
 
         if (common != NULL) {
             freq_channel->get_data_rrd()->add_sample(common->datasize, stime);
-
+	    //calculate airtime in microseconds from datasize in bits and datarate in units of 100Kbps
+	    airtime = 80*(common->datasize)/(l1info->datarate);
+	    freq_channel->get_airtime_rrd()->add_sample(airtime, stime);
             /*
             freq_channel->seen_device_map[common->device] = true;
             */
@@ -248,6 +250,9 @@ int channel_tracker_v2::packet_chain_handler(CHAINCALL_PARMS) {
 
         if (common != NULL) {
             chan_channel->get_data_rrd()->add_sample(common->datasize, stime);
+            //calculate airtime in microseconds from datasize in bits and datarate in units of 100Kbps
+	    airtime = 80*(common->datasize)/(l1info->datarate);
+	    chan_channel->get_airtime_rrd()->add_sample(airtime, stime);
         }
     }
 

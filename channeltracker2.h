@@ -67,6 +67,7 @@ public:
         __ImportField(frequency, p);
         __ImportField(packets_rrd, p);
         __ImportField(data_rrd, p);
+	__ImportField(airtime_rrd, p);
         __ImportField(device_rrd, p);
         __ImportField(signal_data, p);
         reserve_fields(nullptr);
@@ -89,7 +90,8 @@ public:
 
     __ProxyTrackable(packets_rrd, uint64_rrd, packets_rrd);
     __ProxyTrackable(data_rrd, uint64_rrd, data_rrd);
-    __ProxyTrackable(device_rrd,uint64_rrd, device_rrd);
+    __ProxyTrackable(device_rrd, uint64_rrd, device_rrd);
+    __ProxyTrackable(airtime_rrd, uint64_rrd, airtime_rrd);
 
     __ProxyTrackable(signal_data, kis_tracked_signal_data, signal_data);
 
@@ -111,6 +113,7 @@ protected:
         register_field("kismet.channelrec.frequency", "physical frequency", &frequency);
         register_field("kismet.channelrec.packets_rrd", "packet count RRD", &packets_rrd);
         register_field("kismet.channelrec.data_rrd", "byte count RRD", &data_rrd);
+	register_field("kismet.channelrec.airtime_rrd", "airtime RRD", &airtime_rrd);
         register_field("kismet.channelrec.device_rrd", "active devices RRD", &device_rrd);
         register_field("kismet.channelrec.signal", "signal records", &signal_data);
     }
@@ -133,6 +136,9 @@ protected:
 
     // Data in bytes per second RRD
     std::shared_ptr<kis_tracked_rrd<> > data_rrd;
+
+    // Airtime in microseconds RRD
+    std::shared_ptr<kis_tracked_rrd<> > airtime_rrd;
 
     // Devices active per second RRD
     std::shared_ptr<kis_tracked_rrd<> > device_rrd;
